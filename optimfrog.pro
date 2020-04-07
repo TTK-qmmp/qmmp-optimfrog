@@ -1,3 +1,6 @@
+include(../../plugins.pri)
+
+TARGET = $$PLUGINS_PREFIX/Input/optimfrog
 
 HEADERS += decoderoptimfrogfactory.h \
            decoder_optimfrog.h \
@@ -9,27 +12,13 @@ SOURCES += decoderoptimfrogfactory.cpp \
            optimfrogmetadatamodel.cpp \
            optimfroghelper.cpp
 
-CONFIG += warn_on plugin link_pkgconfig c++11
-
-TEMPLATE = lib
-
-QMAKE_CLEAN += lib$${TARGET}.so
-
 unix {
-  CONFIG += link_pkgconfig
-  PKGCONFIG += qmmp liboptimfrog
-
-  QMMP_PREFIX = $$system(pkg-config qmmp --variable=prefix)
-  PLUGIN_DIR = $$system(pkg-config qmmp --variable=plugindir)/Input
-  LOCAL_INCLUDES = $${QMMP_PREFIX}/include
-  LOCAL_INCLUDES -= $$QMAKE_DEFAULT_INCDIRS
-  INCLUDEPATH += $$LOCAL_INCLUDES
-
-  plugin.path = $${PLUGIN_DIR}
-  plugin.files = lib$${TARGET}.so
-  INSTALLS += plugin
+    target.path = $$PLUGIN_DIR/Input
+    INSTALLS += target
+    PKGCONFIG += OptimFROG
+    QMAKE_CLEAN = $$PLUGINS_PREFIX/Input/liboptimfrog.so
 }
 
 win32 {
-    LIBS += -L. -lqmmp -lOptimFROG
+    LIBS += -lOptimFROG
 }
