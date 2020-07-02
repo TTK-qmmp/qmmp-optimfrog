@@ -16,8 +16,8 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
 
-#ifndef OptimFROGHELPER_H
-#define OptimFROGHELPER_H
+#ifndef OPTIMFROGHELPER_H
+#define OPTIMFROGHELPER_H
 
 #include <map>
 #include <QFile>
