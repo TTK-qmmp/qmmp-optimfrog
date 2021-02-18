@@ -1,21 +1,3 @@
-/* =================================================
- * This file is part of the TTK qmmp plugin project
- * Copyright (C) 2015 - 2020 Greedysky Studio
-
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; If not, see <http://www.gnu.org/licenses/>.
- ================================================= */
-
 #include "optimfroghelper.h"
 
 #if defined Q_OS_WIN && defined __GNUC__
@@ -35,9 +17,7 @@ OptimFROGHelper::OptimFROGHelper(QIODevice *i)
    : m_decoder(nullptr),
      m_reader(i)
 {
-#if defined Q_OS_WIN && defined __GNUC__
-    m_instance = nullptr;
-#endif
+
 }
 
 OptimFROGHelper::~OptimFROGHelper()
@@ -46,6 +26,7 @@ OptimFROGHelper::~OptimFROGHelper()
     {
         return;
     }
+
 #if defined Q_OS_WIN && defined __GNUC__
     ((OFROG_close)GetSymbolAddress("OptimFROG_close"))(m_decoder);
     ((OFROG_destroyInstance)GetSymbolAddress("OptimFROG_destroyInstance"))(m_decoder);
@@ -59,8 +40,9 @@ bool OptimFROGHelper::initialize()
 {
 #if defined Q_OS_WIN && defined __GNUC__
     m_instance = LoadLibraryA("libOptimFROG.dll");
-    if(m_instance == nullptr)
+    if(!m_instance)
     {
+        qWarning("OptimFROGHelper: load plugin failed");
         return false;
     }
     m_decoder = ((OFROG_createInstance)GetSymbolAddress("OptimFROG_createInstance"))();
@@ -77,16 +59,17 @@ bool OptimFROGHelper::initialize()
         ofr_get_pos,
         ofr_seek,
     };
-    OptimFROG_Tags ofr_tags;
 
-    if(m_decoder == nullptr)
+    if(!m_decoder)
     {
+        qWarning("OptimFROGHelper: OptimFROG_createInstance failed");
         return false;
     }
 
 #if defined Q_OS_WIN && defined __GNUC__
     if(!((OFROG_openExt)GetSymbolAddress("OptimFROG_openExt"))(m_decoder, &rint, m_reader, C_TRUE))
     {
+        qWarning("OptimFROGHelper: OptimFROG_openExt failed");
         ((OFROG_destroyInstance)GetSymbolAddress("OptimFROG_destroyInstance"))(m_decoder);
         return false;
     }
@@ -94,6 +77,7 @@ bool OptimFROGHelper::initialize()
 #else
     if(!OptimFROG_openExt(m_decoder, &rint, m_reader, C_TRUE))
     {
+        qWarning("OptimFROGHelper: OptimFROG_openExt failed");
         OptimFROG_destroyInstance(m_decoder);
         return false;
     }
@@ -105,16 +89,17 @@ bool OptimFROGHelper::initialize()
     {
         m_info.bitspersample = 16;
     }
+
+#if defined Q_OS_LINUX
     if(strncmp(m_info.sampleType, "SINT", 4) != 0 && strncmp(m_info.sampleType, "UINT", 4) != 0)
     {
-#if defined Q_OS_WIN && defined __GNUC__
-        ((OFROG_destroyInstance)GetSymbolAddress("OptimFROG_destroyInstance"))(m_decoder);
-#else
+        qWarning("OptimFROGHelper: sampleType failed");
         OptimFROG_destroyInstance(m_decoder);
-#endif
         return false;
     }
+#endif
 
+    OptimFROG_Tags ofr_tags;
     m_signed = m_info.sampleType[0] == 'S';
 #if defined Q_OS_WIN && defined __GNUC__
     ((OFROG_getTags)GetSymbolAddress("OptimFROG_getTags"))(m_decoder, &ofr_tags);
@@ -123,7 +108,9 @@ bool OptimFROGHelper::initialize()
 #endif
     for(uInt32_t i = 0; i < ofr_tags.keyCount; i++)
     {
-        m_tags.insert(std::pair<std::string, std::string>(ofr_tags.keys[i], ofr_tags.values[i]));
+        std::string key(ofr_tags.keys[i]);
+        std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+        m_tags.insert(std::pair<std::string, std::string>(key, ofr_tags.values[i]));
     }
 #if defined Q_OS_WIN && defined __GNUC__
     ((OFROG_freeTags)GetSymbolAddress("OptimFROG_freeTags"))(&ofr_tags);
@@ -170,6 +157,15 @@ void OptimFROGHelper::seek(int pos)
     {
         OptimFROG_seekTime(m_decoder, pos);
     }
+#endif
+}
+
+int OptimFROGHelper::length() const
+{
+#if defined Q_OS_WIN && defined __GNUC__
+    return (static_cast<QIODevice*>(m_reader)->size() * 8.0) / m_info.bitrate;
+#else
+    return m_info.length_ms;
 #endif
 }
 

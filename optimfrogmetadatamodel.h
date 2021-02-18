@@ -1,6 +1,6 @@
 /* =================================================
  * This file is part of the TTK qmmp plugin project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,13 @@ class OptimFROGMetaDataModel : public MetaDataModel
 {
     Q_DECLARE_TR_FUNCTIONS(OptimFROGMetaDataModel)
 public:
-    OptimFROGMetaDataModel(const QString &path);
+    explicit OptimFROGMetaDataModel(const QString &path);
 
     virtual QList<MetaDataItem> extraProperties() const override;
 
 private:
     QString m_path;
+
 };
 
 #endif
