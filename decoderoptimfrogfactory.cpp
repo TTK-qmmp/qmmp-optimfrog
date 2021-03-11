@@ -3,6 +3,8 @@
 #include "optimfroghelper.h"
 #include "optimfrogmetadatamodel.h"
 
+#include <QMessageBox>
+
 bool DecoderOptimFROGFactory::canDecode(QIODevice *input) const
 {
     OptimFROGHelper helper(input);
@@ -84,4 +86,21 @@ MetaDataModel *DecoderOptimFROGFactory::createMetaDataModel(const QString &path,
 {
     Q_UNUSED(readOnly);
     return new OptimFROGMetaDataModel(path);
+}
+
+void DecoderOptimFROGFactory::showSettings(QWidget *parent)
+{
+    Q_UNUSED(parent);
+}
+
+void DecoderOptimFROGFactory::showAbout(QWidget *parent)
+{
+    QMessageBox::about (parent, tr("About OptimFROGF Reader Plugin"),
+                        tr("Qmmp OptimFROGF Reader Plugin")+"\n"+
+                        tr("Written by: Greedysky <greedysky@163.com>"));
+}
+
+QString DecoderOptimFROGFactory::translation() const
+{
+    return QString();
 }
