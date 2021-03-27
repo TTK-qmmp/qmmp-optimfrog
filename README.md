@@ -4,9 +4,9 @@ This is a plugin for Qmmp (1.4.0 or greater) which supports OptimFROG file.
 The following packages are required, including development headers,
 which some vendors split into separate packages:
 
-• qmmp
-• OptimFROG
-• qt5
+- qmmp
+- OptimFROG
+- qt5
 
 To build, run Qt5's qmake (often installed as qmake-qt5) and then build
 with make:
