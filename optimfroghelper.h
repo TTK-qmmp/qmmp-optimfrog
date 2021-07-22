@@ -19,7 +19,7 @@
 #ifndef OPTIMFROGHELPER_H
 #define OPTIMFROGHELPER_H
 
-#include <map>
+#include <QMap>
 #include <QFile>
 #include <OptimFROG/OptimFROG.h>
 #if defined Q_OS_WIN && defined __GNUC__
@@ -34,32 +34,32 @@ public:
 
     bool initialize();
 
-    int read(void *buf, long size);
-    void seek(int pos);
+    inline int rate() const { return m_info.samplerate; }
+    inline int channels() const { return m_info.channels; }
+    inline int depth() const { return m_info.bitspersample; }
+    inline int bitrate() const { return m_info.bitrate; }
+    inline int version() const { return m_info.version; }
 
-    int rate() const { return m_info.samplerate; }
-    int channels() const { return m_info.channels; }
-    int depth() const { return m_info.bitspersample; }
-    int bitrate() const { return m_info.bitrate; }
-    int version() const { return m_info.version; }
-    int length() const;
-    double compression() const { return 1000.0 * bitrate() / rate() / channels() / depth(); }
+    void seek(qint64 pos);
+    qint64 length() const;
+    qint64 read(unsigned char *data, qint64 maxSize);
 
-    bool hasTags() const { return !m_tags.empty(); }
-    QString getTag(const char* tag) { return QString::fromStdString(m_tags[tag]); }
+    inline double compression() const { return 1000.0 * bitrate() / rate() / channels() / depth(); }
+
+    inline bool hasTags() const { return !m_tags.isEmpty(); }
+    inline QString getTag(const char* tag) { return m_tags[tag]; }
 
 private:
-    Q_DISABLE_COPY(OptimFROGHelper)
 #if defined Q_OS_WIN && defined __GNUC__
     FARPROC GetSymbolAddress(const char* name) const;
     HINSTANCE m_instance = nullptr;
 #endif
-    void *m_decoder;
-    void *m_input;
+    void *m_decoder = nullptr;
+    void *m_input = nullptr;
     OptimFROG_Info m_info;
-    bool m_signed;
+    bool m_signed = false;
 
-    std::map<std::string, std::string> m_tags;
+    QMap<QString, QString> m_tags;
 
     static QIODevice *VFS(void *instance) { return reinterpret_cast<QIODevice *>(instance); }
 
