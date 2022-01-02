@@ -1,6 +1,6 @@
-/* =================================================
+/***************************************************************************
  * This file is part of the TTK qmmp plugin project
- * Copyright (C) 2015 - 2021 Greedysky Studio
+ * Copyright (C) 2015 - 2022 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 
  * You should have received a copy of the GNU General Public License along
  * with this program; If not, see <http://www.gnu.org/licenses/>.
- ================================================= */
+ ***************************************************************************/
 
 #ifndef OPTIMFROGHELPER_H
 #define OPTIMFROGHELPER_H
@@ -23,7 +23,7 @@
 #include <QFile>
 #include <OptimFROG/OptimFROG.h>
 #if defined Q_OS_WIN && defined __GNUC__
-#include <qt_windows.h>
+#  include <qt_windows.h>
 #endif
 
 class OptimFROGHelper
@@ -47,7 +47,7 @@ public:
     inline double compression() const { return 1000.0 * bitrate() / rate() / channels() / depth(); }
 
     inline bool hasTags() const { return !m_tags.isEmpty(); }
-    inline QString getTag(const char* tag) { return m_tags[tag]; }
+    inline QString tag(const char* tag) { return m_tags[tag]; }
 
 private:
 #if defined Q_OS_WIN && defined __GNUC__
