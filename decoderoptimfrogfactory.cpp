@@ -14,7 +14,7 @@ bool DecoderOptimFROGFactory::canDecode(QIODevice *input) const
 DecoderProperties DecoderOptimFROGFactory::properties() const
 {
     DecoderProperties properties;
-    properties.name = "OptimFROG Plugin";
+    properties.name = tr("OptimFROG Plugin");
     properties.shortName = "optimfrog";
     properties.filters << "*.ofr" << "*.ofs";
     properties.description = "OptimFROG Lossless Audio File";
@@ -30,7 +30,6 @@ Decoder *DecoderOptimFROGFactory::create(const QString &path, QIODevice *input)
 QList<TrackInfo*> DecoderOptimFROGFactory::createPlayList(const QString &path, TrackInfo::Parts parts, QStringList *)
 {
     TrackInfo *info = new TrackInfo(path);
-
     if(parts == TrackInfo::Parts())
     {
         return QList<TrackInfo*>() << info;
@@ -53,10 +52,11 @@ QList<TrackInfo*> DecoderOptimFROGFactory::createPlayList(const QString &path, T
     if(parts & TrackInfo::Properties)
     {
         info->setValue(Qmmp::BITRATE, helper.bitrate());
-        info->setValue(Qmmp::SAMPLERATE, helper.rate());
+        info->setValue(Qmmp::SAMPLERATE, helper.sampleRate());
         info->setValue(Qmmp::CHANNELS, helper.channels());
+        info->setValue(Qmmp::BITS_PER_SAMPLE, helper.depth());
         info->setValue(Qmmp::FORMAT_NAME, "OptimFROG");
-        info->setDuration(helper.length());
+        info->setDuration(helper.totalTime());
     }
 
     if((parts & TrackInfo::MetaData) && helper.hasTags())

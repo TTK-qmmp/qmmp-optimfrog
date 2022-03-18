@@ -18,7 +18,3 @@ unix {
     PKGCONFIG += OptimFROG
     QMAKE_CLEAN = $$PLUGINS_PREFIX/Input/liboptimfrog.so
 }
-
-win32 {
-    LIBS += -lOptimFROG
-}
