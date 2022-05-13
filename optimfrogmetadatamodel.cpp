@@ -11,7 +11,6 @@ OptimFROGMetaDataModel::OptimFROGMetaDataModel(const QString &path)
 QList<MetaDataItem> OptimFROGMetaDataModel::extraProperties() const
 {
     QList<MetaDataItem> ep;
-
     QFile file(m_path);
     if(file.open(QIODevice::ReadOnly))
     {
@@ -23,6 +22,7 @@ QList<MetaDataItem> OptimFROGMetaDataModel::extraProperties() const
 
         ep << MetaDataItem(tr("Version"), QString::number(helper.version()));
         ep << MetaDataItem(tr("Compression ratio"), QString::number(helper.compression()));
+        file.close();
     }
     return ep;
 }
