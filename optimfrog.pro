@@ -16,5 +16,4 @@ unix {
     target.path = $$PLUGIN_DIR/Input
     INSTALLS += target
     PKGCONFIG += OptimFROG
-    QMAKE_CLEAN = $$PLUGINS_PREFIX/Input/liboptimfrog.so
 }
