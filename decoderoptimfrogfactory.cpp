@@ -98,9 +98,9 @@ void DecoderOptimFROGFactory::showSettings(QWidget *parent)
 
 void DecoderOptimFROGFactory::showAbout(QWidget *parent)
 {
-    QMessageBox::about (parent, tr("About OptimFROGF Reader Plugin"),
-                        tr("Qmmp OptimFROGF Reader Plugin")+"\n"+
-                        tr("Written by: Greedysky <greedysky@163.com>"));
+    QMessageBox::about(parent, tr("About OptimFROGF Reader Plugin"),
+                       tr("Qmmp OptimFROGF Reader Plugin") + "\n" +
+                       tr("Written by: Greedysky <greedysky@163.com>"));
 }
 
 QString DecoderOptimFROGFactory::translation() const
