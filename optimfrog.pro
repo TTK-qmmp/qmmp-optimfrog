@@ -1,7 +1,3 @@
-include($$PWD/../../plugins.pri)
-
-TARGET = $$PLUGINS_PREFIX/Input/optimfrog
-
 HEADERS += decoderoptimfrogfactory.h \
            decoder_optimfrog.h \
            optimfrogmetadatamodel.h \
@@ -12,8 +8,28 @@ SOURCES += decoderoptimfrogfactory.cpp \
            optimfrogmetadatamodel.cpp \
            optimfroghelper.cpp
 
-unix {
-    target.path = $$PLUGIN_DIR/Input
-    INSTALLS += target
-    PKGCONFIG += OptimFROG
+#CONFIG += BUILD_PLUGIN_INSIDE
+contains(CONFIG, BUILD_PLUGIN_INSIDE){
+    include($$PWD/../../plugins.pri)
+    TARGET = $$PLUGINS_PREFIX/Input/optimfrog
+
+    unix{
+        target.path = $$PLUGIN_DIR/Input
+        INSTALLS += target
+        PKGCONFIG += OptimFROG
+    }
+}else{
+    CONFIG += warn_off plugin lib thread link_pkgconfig c++11
+    TEMPLATE = lib
+
+    unix{
+        PKGCONFIG += qmmp-1 OptimFROG
+
+        PLUGIN_DIR = $$system(pkg-config qmmp-1 --variable=plugindir)/Input
+        INCLUDEPATH += $$system(pkg-config qmmp-1 --variable=prefix)/include
+
+        plugin.path = $${PLUGIN_DIR}
+        plugin.files = lib$${TARGET}.so
+        INSTALLS += plugin
+    }
 }
