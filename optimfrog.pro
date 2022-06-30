@@ -16,14 +16,14 @@ contains(CONFIG, BUILD_PLUGIN_INSIDE){
     unix{
         target.path = $$PLUGIN_DIR/Input
         INSTALLS += target
-        PKGCONFIG += OptimFROG
+        PKGCONFIG += optimfrog
     }
 }else{
     CONFIG += warn_off plugin lib thread link_pkgconfig c++11
     TEMPLATE = lib
 
     unix{
-        PKGCONFIG += qmmp-1 OptimFROG
+        PKGCONFIG += qmmp-1 optimfrog
 
         PLUGIN_DIR = $$system(pkg-config qmmp-1 --variable=plugindir)/Input
         INCLUDEPATH += $$system(pkg-config qmmp-1 --variable=prefix)/include
