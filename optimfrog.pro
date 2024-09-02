@@ -19,6 +19,7 @@ contains(CONFIG, BUILD_PLUGIN_INSIDE){
         PKGCONFIG += optimfrog
     }
 }else{
+    QT += widgets
     CONFIG += warn_off plugin lib thread link_pkgconfig c++11
     TEMPLATE = lib
 
