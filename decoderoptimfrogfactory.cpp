@@ -92,10 +92,18 @@ MetaDataModel *DecoderOptimFROGFactory::createMetaDataModel(const QString &path,
     return new OptimFROGMetaDataModel(path);
 }
 
+#if (QMMP_VERSION_INT < 0x10700) || (0x20000 <= QMMP_VERSION_INT && QMMP_VERSION_INT < 0x20200)
 void DecoderOptimFROGFactory::showSettings(QWidget *parent)
 {
     Q_UNUSED(parent);
 }
+#else
+QDialog *DecoderOptimFROGFactory::createSettings(QWidget *parent)
+{
+    Q_UNUSED(parent);
+    return nullptr;
+}
+#endif
 
 void DecoderOptimFROGFactory::showAbout(QWidget *parent)
 {
