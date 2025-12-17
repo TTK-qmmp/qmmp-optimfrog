@@ -107,9 +107,11 @@ QDialog *DecoderOptimFROGFactory::createSettings(QWidget *parent)
 
 void DecoderOptimFROGFactory::showAbout(QWidget *parent)
 {
-    QMessageBox::about(parent, tr("About OptimFROGF Reader Plugin"),
-                       tr("Qmmp OptimFROGF Reader Plugin") + "\n" +
-                       tr("Written by: Greedysky <greedysky@163.com>"));
+    QMessageBox::about(parent, tr("About OptimFROG Reader Plugin"),
+                       tr("Qmmp OptimFROG Reader Plugin") + "\n" +
+                       tr("Written by: Greedysky <greedysky@163.com>") + "\n" +
+                       tr("Based on the library from the libOptimFROG") + "\n" +
+                       tr("Written by Florin Ghido (C) 1996-2022"));
 }
 
 QString DecoderOptimFROGFactory::translation() const
