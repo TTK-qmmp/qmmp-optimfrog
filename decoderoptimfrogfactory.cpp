@@ -28,27 +28,35 @@ Decoder *DecoderOptimFROGFactory::create(const QString &path, QIODevice *input)
     return new DecoderOptimFROG(input);
 }
 
-QList<TrackInfo*> DecoderOptimFROGFactory::createPlayList(const QString &path, TrackInfo::Parts parts, QStringList *)
+TrackInfoList DecoderOptimFROGFactory::createPlayList(const QString &path, TrackInfo::Parts parts, QStringList *)
 {
-    TrackInfo *info = new TrackInfo(path);
+#if QMMP_VERSION_INT < 0x20400
+    TrackInfo *raw(new TrackInfo(path)), *info = raw;
+#else
+    TrackInfo raw(path), info = &raw;
+#endif
     if(parts == TrackInfo::Parts())
     {
-        return QList<TrackInfo*>() << info;
+        return {raw};
     }
 
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly))
     {
+#if QMMP_VERSION_INT < 0x20400
         delete info;
-        return QList<TrackInfo*>();
+#endif
+        return {};
     }
 
     OptimFROGHelper helper(&file);
     if(!helper.initialize())
     {
         file.close();
+#if QMMP_VERSION_INT < 0x20400
         delete info;
-        return QList<TrackInfo*>();
+#endif
+        return {};
     }
 
     if(parts & TrackInfo::Properties)
@@ -83,7 +91,7 @@ QList<TrackInfo*> DecoderOptimFROGFactory::createPlayList(const QString &path, T
     }
 
     file.close();
-    return QList<TrackInfo*>() << info;
+    return {raw};
 }
 
 MetaDataModel *DecoderOptimFROGFactory::createMetaDataModel(const QString &path, bool readOnly)
