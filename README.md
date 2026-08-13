@@ -1,4 +1,4 @@
-This is a plugin for Qmmp (1.6.0 or greater) which supports OptimFROG file.
+This is an inut plugin for Qmmp (1.6.0 or later) that supports OptimFROG files.
 
 Based on [libOptimFROG](http://www.losslessaudio.org) (A library for lossless audio compression).
 
